@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <title>Bot Panel</title>
+  <div class="form">
+    <select class="form-select guilds" onchange="selectGuild()" id="guilds">
+      <option value="select">Select a guild</option>
+    </select>
+    <div class="form-check form-switch channelsDiv">
+      <input onchange="selectGuild()" class="form-check-input" type="checkbox" id="dm">
+      <label class="form-check-label" for="dm">DM</label>
+    </div>
+    <select class="form-select channels" id="channels">
+      <option value="select">Select a channel</option>
+    </select>
+    <div class="mb-3">
+      <input class="form-control" id="message" placeholder="Message">
+    </div>
+    <div>
+      <button style="margin-right: 10px;" class="btn btn-primary" id="send" onclick="send()">Send</button>
+      <button class="btn btn-success" onclick="invite()">Invite</button>
+    </div>
+    <button class="btn btn-danger" style="margin-top: 30px;" onclick="logout()">Log Out</button>
+  </div>
+  <style>
+    .form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-select {
+      width: 280px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
+    .form-control {
+      width: 280px;
+    }
+
+    html {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <script>
+    window.onload = () => {
+      fetch("http://localhost:3000/guilds").then(response => response.json()).then(data => {
+        data.guilds.map(guild => {
+          var x = document.getElementById("guilds");
+          var option = document.createElement("option");
+          option.text = guild.name;
+          option.value = guild.id;
+          x.add(option);
+        })
+      })
+    }
+
+    var input = document.getElementById("message")
+
+    input.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("send").click();
+      }
+    });
+
+    function logout() {
+      fetch("http://localhost:3000/logout").then(() => window.location = "/")
+    }
+
+    function invite() {
+      const guild = document.getElementById("guilds").value
+      const channel = document.getElementById("channels").value
+      if(guild == "select" || channel == "select") return
+      fetch("http://localhost:3000/invite", { headers: { "Guild": guild, "Channel": channel } }).then(response => response.json()).then(data => {
+        alert(data.invite)
+      })
+    }
+
+    function send() {
+      const guild = document.getElementById("guilds").value
+      const channel = document.getElementById("channels").value
+      const message = document.getElementById("message").value
+      if(document.getElementById("dm").checked === true) fetch("http://localhost:3000/send", { headers: { "Channel": channel, "Message": message } }), document.getElementById("message").value = null
+      else fetch("http://localhost:3000/send", { headers: { "Guild": guild, "Channel": channel, "Message": message } }), document.getElementById("message").value = null
+    }
+
+    function selectGuild() {
+      const id = document.getElementById("guilds").value
+      if(id == "select") return
+      if(document.getElementById("dm").checked === true) {
+        fetch("http://localhost:3000/members", { headers: { "Id": id } }).then(response => response.json()).then(data => {
+          document.getElementById("channels").innerHTML = `<select id="channels"><option>Select a user</option></select>`
+          data.members.map(member => {
+            var x = document.getElementById("channels");
+            var option = document.createElement("option");
+            option.text = "@" + member.tag;
+            option.value = member.id;
+            x.add(option);
+          })
+        })
+      } else {
+        fetch("http://localhost:3000/channels", { headers: { "Id": id } }).then(response => response.json()).then(data => {
+          document.getElementById("channels").innerHTML = `<select id="channels"><option>Select a channel</option></select>`
+          data.channels.filter(ch => ch.type === 0).map(channel => {
+            var x = document.getElementById("channels");
+            var option = document.createElement("option");
+            option.text = "# " + channel.name;
+            option.value = channel.id;
+            x.add(option);
+          })
+        })
+      }
+    }
+  </script>
+</body>
+</html>
