@@ -103,8 +103,8 @@ app.get('/invite', async (req, res) => {
 })
 
 app.get('/send', (req, res) => {
-  if(!req.headers["guild"] && req.headers["channel"]) client.users.cache.get(req.headers["channel"]).send(req.headers["message"])
-  else client.guilds.cache.get(req.headers["guild"]).channels.cache.get(req.headers["channel"]).send(req.headers["message"])
+  if(!req.headers["guild"] && req.headers["channel"]) client.users.cache.get(req.headers["channel"]).send(req.headers["message"]).catch(err => console.error(err))
+  else client.guilds.cache.get(req.headers["guild"]).channels.cache.get(req.headers["channel"]).send(req.headers["message"]).catch(err => console.error(err))
 })
 
 app.listen(port, () => {

@@ -108,7 +108,7 @@
       if(document.getElementById("dm").checked === true) {
         fetch("http://localhost:3000/members", { headers: { "Id": id } }).then(response => response.json()).then(data => {
           document.getElementById("channels").innerHTML = `<select id="channels"><option>Select a user</option></select>`
-          data.members.map(member => {
+          data.members.sort((a, b) => a.name.localeCompare(b.name)).map(member => {
             var x = document.getElementById("channels");
             var option = document.createElement("option");
             option.text = "@" + member.tag;
