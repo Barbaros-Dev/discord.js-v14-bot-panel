@@ -5,7 +5,7 @@ const path = require('path');
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const { LocalStorage } = require("node-localstorage");
 
-global.localStorage = new LocalStorage('./token');
+global.localStorage = new LocalStorage('./storage');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages] });
 
