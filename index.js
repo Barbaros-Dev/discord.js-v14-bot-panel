@@ -59,6 +59,11 @@ app.get('/logout', (req, res) => {
   res.json({ status: "success" })
 })
 
+app.get('/leave', (req, res) => {
+  client.guilds.cache.get(req.headers["guild"]).leave()
+  res.json({ status: "success" })
+})
+
 app.get('/guilds', async (req, res) => {
   try {
     const guildsFetch = await client.guilds.fetch()

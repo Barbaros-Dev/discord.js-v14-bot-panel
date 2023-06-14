@@ -23,7 +23,8 @@
     </div>
     <div>
       <button style="margin-right: 10px;" class="btn btn-primary" id="send" onclick="send()">Send</button>
-      <button class="btn btn-success" onclick="invite()">Invite</button>
+      <button style="margin-right: 10px;" class="btn btn-success" onclick="invite()">Invite</button>
+      <button class="btn btn-danger" onclick="leave()">Leave</button>
     </div>
     <button class="btn btn-danger" style="margin-top: 30px;" onclick="logout()">Log Out</button>
   </div>
@@ -100,6 +101,14 @@
       const message = document.getElementById("message").value
       if(document.getElementById("dm").checked === true) fetch("http://localhost:3000/send", { headers: { "Channel": channel, "Message": message } }), document.getElementById("message").value = null
       else fetch("http://localhost:3000/send", { headers: { "Guild": guild, "Channel": channel, "Message": message } }), document.getElementById("message").value = null
+    }
+
+    function leave() {
+      const guild = document.getElementById("guilds").value
+      fetch("http://localhost:3000/leave", { headers: { "Guild": guild } }).then(response => response.json()).then(data => {
+        alert("Sunucudan çıkış yapıldı.")
+        window.location.pathname = "/"
+      })
     }
 
     function selectGuild() {
