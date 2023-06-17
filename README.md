@@ -1,7 +1,7 @@
 # Discord.js v14 Bot Panel
 
 ## Gereklilikler
-- Botun sunucularını ve direkt mesajlarını çekebilmesi için aşağıdaki resimde gösterilen intentlerin açık olması gerekmektedir:
+- Botun sunuculara ve direkt mesajlara erişebilmesi için aşağıdaki resimde gösterilen intentlerin etkinleştirilmiş olması gerekmektedir:
 
 !['image'](https://live.staticflickr.com/65535/52981142105_6c767a532b_h.jpg)
 
