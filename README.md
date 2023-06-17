@@ -2,6 +2,7 @@
 
 ## Gereklilikler
 - Botun sunucularını ve direkt mesajlarını çekebilmesi için aşağıdaki resimde gösterilen intentlerin açık olması gerekmektedir:
+
 !['image'](https://live.staticflickr.com/65535/52981142105_6c767a532b_h.jpg)
 
 ## Kurulum
